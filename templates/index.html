@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Parts Of Speech - Transformer</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous"/>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"/>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-dark border-bottom border-bottom-dark sticky-top" data-bs-theme="dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/">Parts of Speech</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item"><a class="nav-link active" id="home_page" href="{{ url_for('index') }}">Home</a></li>
+            <li class="nav-item"><a class="nav-link" id="tutorial_page" href="{{ url_for('tutorial') }}">Tutorial</a></li>
+            <li class="nav-item"><a class="nav-link" id="history_page" href="{{ url_for('history') }}">History</a></li>
+            <li class="nav-item"><a class="nav-link" id="about_us_page" href="{{ url_for('about') }}">About Us</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+      <div class="row">
+        <div class="col-lg-6 col-sm-8 mb-3 mb-sm-0 mb-1">
+          <div class="card">
+            <h5 class="card-header text-bg-secondary d-flex justify-content-between align-items-center">
+              Input Text
+              <button class="btn btn-outline-light button" form="inputForm">Transform</button>
+            </h5>
+            <form method="POST" action="{{ url_for('index') }}" id="inputForm">
+              <textarea id="inputTextarea" class="card-body w-100" style="border: none; min-height: 32em; resize: none;" name="string" placeholder="Enter your text here...">{{ request.form["string"]}}</textarea>
+            </form>
+          </div>
+        </div>
+
+        <div class="col-lg-6 col-sm-8 mb-1">
+          <div class="card">
+            <h5 class="card-header text-bg-secondary d-flex justify-content-between align-items-center">
+              Transform Text
+              <button class="btn btn-outline-secondary" disabled>...</button>
+            </h5>
+            <span id="example" class="card-body text-bg-light" placeholder="The result after defining part of speech..." style="border: none; min-height: 32em" disabled readonly></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tags-container" />
+  </body>
+
+  <script src="{{ url_for('static', filename='main.js') }}"></script>
+  <script type="text/javascript">
+      (uri => {
+        // Register a listener for submit events.
+        const form = document.querySelector('#inputForm');
+        form.addEventListener('submit', evt => {
+
+          evt.preventDefault();
+
+          fetch(uri, {
+            method: 'post',
+            body: new FormData(evt.target)
+          }).then(resp => resp.json())
+            .then(data => {
+              // Handle response here.
+              decorated(data.result);
+              let _history = JSON.parse(localStorage.getItem("history")) || [];
+              // add new transformed text to history
+              _history.unshift(`${$("#example").html()}`);
+
+              // update history to local storage
+              localStorage.setItem("history", JSON.stringify(_history));
+            });
+        });
+      })({{ url_for('submit') | tojson }});
+  </script>
+</html>

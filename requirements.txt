@@ -1,1 +1,10 @@
-Flask==2.2.2
+tensorflow==1.15.0
+bert-tensorflow
+tensorflow_hub
+tqdm
+scikit-learn
+nltk
+jupyter
+pandas
+flask
+flask-cors

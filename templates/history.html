@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"/>
+    <title>Parts of Speech - Transformer</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-dark border-bottom border-bottom-dark sticky-top" data-bs-theme="dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="/">Parts of Speech</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+  
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+              <li class="nav-item"><a class="nav-link" id="home_page" href="{{ url_for('index') }}">Home</a></li>
+              <li class="nav-item"><a class="nav-link" id="tutorial_page" href="{{ url_for('tutorial') }}">Tutorial</a></li>
+              <li class="nav-item"><a class="nav-link active" id="history_page" href="{{ url_for('history') }}">History</a></li>
+              <li class="nav-item"><a class="nav-link" id="about_us_page" href="{{ url_for('about') }}">About Us</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <div class="col-lg-12 col-sm-8 mb-1">
+                <div class="card">
+                    <h5 class="card-header text-bg-secondary d-flex justify-content-between align-items-center">
+                    Transformed Text
+                    <button class="btn btn-outline-secondary" disabled>...</button>
+                    </h5>
+                    <span id="history_text" class="card-body text-bg-light d-flex flex-column" placeholder="History..." style="border: none; min-height: 45 em" disabled readonly></span>
+
+                    <nav aria-label="page navigation">
+                    <ul class="pagination justify-content-end pe-3" id="pagination"></ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="tags-container"/>
+    
+  </body>
+
+  <script src="{{ url_for('static', filename='main.js') }}"></script>
+  <script>
+    
+    // get history from storage
+    let _history = JSON.parse(localStorage.getItem("history")) || [];
+
+    // render history per page
+    const history_per_page = 5;
+    function render_history(page) {
+      $("#history_text").text("");
+
+      const start_index = history_per_page * (page - 1);
+      const end_index = start_index + 5 < _history.length ? start_index + 5 : _history.length;
+
+      for (let i = start_index; i < end_index; i++) {
+        $(`<div class="card" style="height: 7em; margin-bottom: 1em;">
+            <div class="row no-gutters">
+              <div class="col-md-1 d-flex justify-content-center align-items-center text-bg-dark rounded-start" style="margin-top: -1.5px;"><h5>#${_history.length - i}</h5></div>
+              <span id="example" class="col-md-11 card-body" style="height: 7rem;">${_history[i]}</span>
+            </div>
+          </div>`).appendTo("#history_text"); //d-flex justify-content-between align-content-between flex-wrap
+      }
+    }
+    render_history(1);
+
+    // render pagination
+    const number_of_pages = ((_history.length / history_per_page) >> 0) + (_history.length % history_per_page != 0 ? 1 : 0);
+    $("#pagination").append(`<li class="page-item page-link" id="previous"><span aria-hidden="true">&laquo;</span></li>`);
+    for (let i = 0; i < number_of_pages; i++) {
+      $("#pagination").append(`<li class="page-item page-link" id="page-${i + 1}">${i + 1}</li>`);
+    }
+    $("#pagination").append(`<li class="page-item page-link" id="next"><span aria-hidden="true">&raquo;</span></li>`);
+
+    // handle pagination
+    $("#page-1").toggleClass("active");
+    $(".page-item").click(function () {
+      let clicked_id = $(this).attr("id");
+      let current_id = parseInt($(".page-item.page-link.active").attr("id").slice(5));
+      let new_id = "";
+
+      $(".page-item.page-link.active").toggleClass("active");
+
+      if (clicked_id == "previous") {
+        // click previous page-item
+        new_id = "page-" + (current_id - 1 > 0 ? current_id - 1 : current_id);
+      } else if (clicked_id == "next") {
+        // click next page-item
+        new_id = "page-" + (current_id + 1 <= number_of_pages ? current_id + 1 : current_id);
+      } else {
+        new_id = "page-" + parseInt(clicked_id.slice(5));
+      }
+
+      $(`#${new_id}`).toggleClass("active");
+
+      render_history(parseInt(new_id.slice(5)));
+    });
+  </script>
+</html>
