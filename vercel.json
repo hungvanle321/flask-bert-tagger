@@ -3,15 +3,11 @@
   "builds": [
     {
       "src": "/api/index.py",
-      "use": "@vercel/python",
-      "config": { "runtime": "python3.7" }
+      "use": "@vercel/python"
     }
   ],
   "rewrites": [
     { "source": "/(.*)", "destination": "/api/index.py" }
-  ],
-  "env": {
-    "VERCEL_PYTHON_VERSION": "3.7"
-  }
+  ]
 }
 
