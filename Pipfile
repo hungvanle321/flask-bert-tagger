@@ -1,0 +1,21 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+tensorflow = "==1.15.0"
+bert-tensorflow = "*"
+tensorflow-hub = "*"
+tqdm = "*"
+scikit-learn = "*"
+nltk = "*"
+jupyter = "*"
+pandas = "*"
+flask = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.7"
+python_full_version = "3.7.16"
