@@ -1,3 +1,4 @@
+python==3.7.16
 tensorflow==1.15.0
 bert-tensorflow
 tensorflow_hub
