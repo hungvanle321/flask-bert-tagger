@@ -11,7 +11,7 @@
     { "source": "/(.*)", "destination": "/api/index.py" }
   ],
   "env": {
-    "PYTHON_VERSION": "3.7.16"
+    "VERCEL_PYTHON_VERSION": "3.7"
   }
 }
 
