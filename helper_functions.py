@@ -7,7 +7,7 @@ from tensorflow.keras.layers import Layer
 import tensorflow.keras.backend as K
 from tqdm.notebook import tqdm
 from absl import flags
-from main import sess, graph
+from app import sess, graph
 import string
 
 sys.argv=['preserve_unused_tokens=False']
