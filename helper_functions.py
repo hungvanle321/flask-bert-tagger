@@ -121,7 +121,7 @@ def create_features_from_examples(tokenizer, examples, max_length=256):
 
 # Tải tokenizer của model BERT đã được đào tạo
 def load_bert_tokenizer():
-    bert_module = hub.Module("./bert_module")
+    bert_module = hub.Module("https://tfhub.dev/google/bert_uncased_L-12_H-768_A-12/1")
     
     # Lấy thông tin về việc mã hóa văn bản từ module BERT
     token_info = bert_module(signature = "tokenization_info", as_dict = True)
@@ -150,7 +150,7 @@ class BERTLayer(Layer):
 
     # Tạo các trọng số
     def build(self, input_shape):
-        self.bert = hub.Module("./bert_module",
+        self.bert = hub.Module("https://tfhub.dev/google/bert_uncased_L-12_H-768_A-12/1",
                                trainable=self.trainable, 
                                name="{}_module".format(self.name))
 
