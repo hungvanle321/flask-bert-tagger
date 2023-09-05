@@ -1,0 +1,2 @@
+A website using Flask with trained model (using Tensorflow, Keras, bert-tensorflow, ...) to analyze and tag the parts of speech (nouns, verbs, adjectives, adverbs,...) in textual content.
+I deleted the model file because it takes too much Github space. You can find it in the recent commits.
